@@ -1,6 +1,7 @@
 import React from "react";
+import AutoSuggest from "./AutoSuggestRoutes";
 
-function SearchForm(props) {
+function SearchFormRoute(props) {
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -27,4 +28,4 @@ function SearchForm(props) {
   );
 }
 
-export default SearchForm;
+export default SearchFormRoute;
