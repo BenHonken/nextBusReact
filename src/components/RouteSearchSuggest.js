@@ -1,13 +1,29 @@
 import React, { Component, useEffect } from "react";
 
 function RouteSearchSuggest(props) {
-
-
+  let route = props.route
+  let direction = props.direction
+  let directionList = props.directionList
+  let getRouteNumber=props.getRouteNumber;
+  let clearDirection=props.clearDirection;
+  let getDirectionList=props.getDirectionList;
+  let clearStop=props.clearStop;
+  useEffect(() => {
+    getRouteNumber();
+  },[route])
+  useEffect(() => {
+    getDirectionList();
+  },[route])
   const results = props.routeList.filter(route =>
     route.Description.toLowerCase().includes(props.route.toLowerCase()));
   return (
-    <li className="nav-item add-tab">
-      <button className="add-button" type="button" data-target="#routeModal" data-toggle="modal">
+    <div>
+    <div className="card text-center">
+      <div className="card-header" style={{height: 110}}>
+        <h2>Route:</h2>
+      </div>
+    <li className="nav-item add-tab" style={{height: 208}}>
+      <button className="add-button" type="button" data-target="#routeModal" data-toggle="modal" style={{marginTop: 89}}>
         Search for a route
           </button>
 
@@ -56,13 +72,15 @@ function RouteSearchSuggest(props) {
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                <button style={{ color: 'white', backgroundColor: "darkslategray", border: '.5 px solid white' }} className="btn" type="submit" onClick={props.getRouteNumber}>Choose This Route</button>
+                <button style={{ color: 'white', backgroundColor: "darkslategray", border: '.5 px solid white' }} className="btn" type="submit" onClick={props.getRouteNumberClick}>Choose This Route</button>
               </div>
             </form>
           </div>
         </div>
       </div>
     </li>
+    </div>
+    </div>
   );
 
 }

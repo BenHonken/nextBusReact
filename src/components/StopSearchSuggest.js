@@ -1,13 +1,28 @@
 import React, { Component, useEffect } from "react";
 
 function StopSearchSuggest(props) {
-
-
+  let stop=props.stop;
+  let stopValue=props.stopValue;
+  let departureList=props.departureList;
+  let getStopValue=props.getStopValue;
+  let getStopValueClick=props.getStopValueClick;
+  let getDepartureList=props.getDepartureList;
+  useEffect(() => {
+    getStopValue();
+  },[stop])
+  useEffect(() => {
+    getDepartureList();
+  },[stopValue])
   const results = props.stopList.filter(stop =>
     stop.Text.toLowerCase().includes(props.stop.toLowerCase()));
   return (
-    <li className="nav-item add-tab">
-      <button className="add-button" type="button" data-target="#stopModal" data-toggle="modal">
+    <div>
+    <div className="card text-center">
+      <div className="card-header" style={{height: 110}}>
+        <h2>Stop:</h2>
+      </div>
+    <li className="nav-item add-tab" style={{height: 208}}>
+      <button className="add-button" type="button" data-target="#stopModal" data-toggle="modal" style={{marginTop: 89}}>
         Search for a stop
           </button>
 
@@ -56,13 +71,15 @@ function StopSearchSuggest(props) {
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                <button style={{ color: 'white', backgroundColor: "darkslategray", border: '.5 px solid white' }} className="btn" type="submit" onClick={props.getStopValue}>Choose this stop</button>
+                <button style={{ color: 'white', backgroundColor: "darkslategray", border: '.5 px solid white' }} className="btn" type="submit" onClick={props.getStopValueClick}>Choose this stop</button>
               </div>
             </form>
           </div>
         </div>
       </div>
     </li>
+    </div>
+    </div>
   );
 
 }

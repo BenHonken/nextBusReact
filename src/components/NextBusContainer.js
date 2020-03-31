@@ -2,8 +2,6 @@ import React, { Component, useEffect } from "react";
 import Container from "./Container";
 import Row from "./Row";
 import Col from "./Col";
-import SearchFormRoute from "./SearchFormRoute";
-import SearchFormStop from "./SearchFormStop";
 import RouteSearchSuggest from "./RouteSearchSuggest";
 import StopSearchSuggest from "./StopSearchSuggest";
 import Direction from "./Direction";
@@ -31,7 +29,20 @@ class NextBusContainer extends Component {
     let response = await axios.get('https://svc.metrotransit.org/NexTrip/Routes?format=json')
     this.setState({ 'routeList': response.data });
   }
-  getRouteNumber = async (event) => {
+  getRouteNumber = async () => {
+    //event.preventDefault();
+    let goodRoute = false
+    for (let i=0; i<this.state.routeList.length; i++){
+      if (this.state.routeList[i].Description.includes(this.state.route) && !goodRoute){
+          this.setState({ 'routeNumber': this.state.routeList[i].Route});
+          goodRoute = true;
+      }
+    }
+    this.clearDirection();
+    this.clearStop();
+    await this.getDirectionList()
+  }
+  getRouteNumberClick = async (event) => {
     event.preventDefault();
     let goodRoute = false
     for (let i=0; i<this.state.routeList.length; i++){
@@ -40,7 +51,9 @@ class NextBusContainer extends Component {
           goodRoute = true;
       }
     }
-    this.getDirectionList();
+    this.clearDirection();
+    this.clearStop();
+    await this.getDirectionList()
   }
   getDirectionList = async () => {
     let response = await axios.get('https://svc.metrotransit.org/NexTrip/Directions/' + this.state.routeNumber + '?format=json')
@@ -48,24 +61,37 @@ class NextBusContainer extends Component {
   }
   clearDirection() {
     this.setState({ 'direction': 0 });
+    this.setState({ 'directionList': [] });
   }
   getStopList = async () => {
     let response = await axios.get('https://svc.metrotransit.org/NexTrip/Stops/' + this.state.routeNumber + '/' + this.state.direction + '?format=json')
+    this.clearStop();
     this.setState({ 'stopList': response.data });
   }
-  getStopValue = async (event) => {
+  getStopValue = async () => {
+    let goodStop = false
+    for (let i=0; i<this.state.stopList.length; i++){
+      if (this.state.stopList[i].Text === this.state.stop){
+        this.setState({ 'stopValue': this.state.stopList[i].Value});
+        goodStop = true;
+      }
+    }
+    await this.getDepartureList();
+  }
+  getStopValueClick = async (event) => {
     event.preventDefault();
     let goodStop = false
     for (let i=0; i<this.state.stopList.length; i++){
       if (this.state.stopList[i].Text === this.state.stop){
-        this.setState({ 'stopValue': this.state.stopList[i].Route});
+        this.setState({ 'stopValue': this.state.stopList[i].Value});
         goodStop = true;
       }
     }
-    this.getDepartureList();
+    await this.getDepartureList();
   }
   clearStop() {
     this.setState({ 'stop': "" });
+    this.setState({ 'stopList': [] });
   }
   handleInputChange = event => {
     const value = event.target.value;
@@ -77,7 +103,7 @@ class NextBusContainer extends Component {
   getDepartureList = async () => {
     let response = await axios.get('https://svc.metrotransit.org/NexTrip/' + this.state.routeNumber + '/' + this.state.direction + '/' + this.state.stopValue + '?format=json')
     this.setState({ 'departureList': response.data });
-    console.log(this.state.departureList);
+    console.log('https://svc.metrotransit.org/NexTrip/' + this.state.routeNumber + '/' + this.state.direction + '/' + this.state.stopValue + '?format=json');
   }
   handleClickRoute = (event) => {
     event.preventDefault();
@@ -87,10 +113,6 @@ class NextBusContainer extends Component {
     event.preventDefault();
     this.setState({ 'stop': event.currentTarget.dataset.value });
   }
-  handleFormSubmit = event => {
-    event.preventDefault();
-    this.getDeparture();
-  };
   render() {
     let route=this.state.route;
     let direction=this.state.direction
@@ -129,9 +151,15 @@ class NextBusContainer extends Component {
               routeList={this.state.routeList}
               route={this.state.route}
               routeNumber={this.state.routeNumber}
+              direction={this.state.direction}
+              directionList={this.state.directionList}
               handleInputChange={this.handleInputChange}
               handleClickRoute={this.handleClickRoute}
               getRouteNumber={this.getRouteNumber}
+              getRouteNumberClick={this.getRouteNumberClick}
+              clearDirection={this.clearDirection}
+              getDirectionList={this.getDirectionList}
+              clearStop={this.clearStop}
             />
           </Col>
           <Col size="md-4">
@@ -147,9 +175,12 @@ class NextBusContainer extends Component {
               stopList={this.state.stopList}
               stop={this.state.stop}
               stopValue={this.state.stopValue}
+              departureList={this.state.departureList}
               handleInputChange={this.handleInputChange}
               handleClickStop={this.handleClickStop}
               getStopValue={this.getStopValue}
+              getStopValueClick={this.getStopValueClick}
+              getDepartureList={this.getDepartureList}
             />
           </Col>
         </Row>
