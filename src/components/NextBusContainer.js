@@ -33,26 +33,15 @@ class NextBusContainer extends Component {
     //event.preventDefault();
     let goodRoute = false
     for (let i=0; i<this.state.routeList.length; i++){
-      if (this.state.routeList[i].Description.includes(this.state.route) && !goodRoute){
+      if (this.state.routeList[i].Description.toLowerCase().includes(this.state.route.toLowerCase()) && !goodRoute){
           this.setState({ 'routeNumber': this.state.routeList[i].Route});
           goodRoute = true;
       }
     }
     this.clearDirection();
     this.clearStop();
-    await this.getDirectionList()
-  }
-  getRouteNumberClick = async (event) => {
-    event.preventDefault();
-    let goodRoute = false
-    for (let i=0; i<this.state.routeList.length; i++){
-      if (this.state.routeList[i].Description.includes(this.state.route) && !goodRoute){
-          this.setState({ 'routeNumber': this.state.routeList[i].Route});
-          goodRoute = true;
-      }
-    }
-    this.clearDirection();
-    this.clearStop();
+    console.log(this.state.route)
+    console.log(this.state.routeNumber)
     await this.getDirectionList()
   }
   getDirectionList = async () => {
@@ -64,22 +53,11 @@ class NextBusContainer extends Component {
     this.setState({ 'directionList': [] });
   }
   getStopList = async () => {
-    let response = await axios.get('https://svc.metrotransit.org/NexTrip/Stops/' + this.state.routeNumber + '/' + this.state.direction + '?format=json')
     this.clearStop();
+    let response = await axios.get('https://svc.metrotransit.org/NexTrip/Stops/' + this.state.routeNumber + '/' + this.state.direction + '?format=json')
     this.setState({ 'stopList': response.data });
   }
   getStopValue = async () => {
-    let goodStop = false
-    for (let i=0; i<this.state.stopList.length; i++){
-      if (this.state.stopList[i].Text === this.state.stop){
-        this.setState({ 'stopValue': this.state.stopList[i].Value});
-        goodStop = true;
-      }
-    }
-    await this.getDepartureList();
-  }
-  getStopValueClick = async (event) => {
-    event.preventDefault();
     let goodStop = false
     for (let i=0; i<this.state.stopList.length; i++){
       if (this.state.stopList[i].Text === this.state.stop){
@@ -114,35 +92,6 @@ class NextBusContainer extends Component {
     this.setState({ 'stop': event.currentTarget.dataset.value });
   }
   render() {
-    let route=this.state.route;
-    let direction=this.state.direction
-    let stop=this.state.stop
-    let stopValue=this.state.stopValue
-    let departureList=this.state.departureList
-    // useEffect(() => {
-    //   this.getRouteNumber();
-    // },[route])
-    // useEffect(() => {
-    //   this.clearDirection();
-    // },[route])
-    // useEffect(() => {
-    //   this.getDirectionList();
-    // },[route])
-    // useEffect(() => {
-    //   this.clearStop();
-    // },[route])
-    // useEffect(() => {
-    //   this.getStopList();
-    // },[direction])
-    // useEffect(() => {
-    //   this.getStopValue();
-    // },[stop])
-    // useEffect(() => {
-    //   this.getDepartureList();
-    // },[stopValue])
-    // useEffect(() => {
-    //   this.handleFormSubmit();
-    // },[departureList])
     return (
       <Container>
         <Row>
@@ -156,10 +105,7 @@ class NextBusContainer extends Component {
               handleInputChange={this.handleInputChange}
               handleClickRoute={this.handleClickRoute}
               getRouteNumber={this.getRouteNumber}
-              getRouteNumberClick={this.getRouteNumberClick}
-              clearDirection={this.clearDirection}
               getDirectionList={this.getDirectionList}
-              clearStop={this.clearStop}
             />
           </Col>
           <Col size="md-4">
@@ -179,7 +125,6 @@ class NextBusContainer extends Component {
               handleInputChange={this.handleInputChange}
               handleClickStop={this.handleClickStop}
               getStopValue={this.getStopValue}
-              getStopValueClick={this.getStopValueClick}
               getDepartureList={this.getDepartureList}
             />
           </Col>
@@ -187,7 +132,10 @@ class NextBusContainer extends Component {
         <Row>
           <Col size="md-12">
             <hr />
-            <Result departureList={this.state.departureList}/>
+            <Result
+            departureList={this.state.departureList}
+            stopValue={this.state.stopValue}
+            />
           </Col>
         </Row>
       </Container >
