@@ -2,18 +2,15 @@ import React, { Component, useEffect } from "react";
 
 function RouteSearchSuggest(props) {
   let route = props.route
-  let direction = props.direction
-  let directionList = props.directionList
+  let routeNumber = props.routeNumber
   let getRouteNumber=props.getRouteNumber;
-  let clearDirection=props.clearDirection;
   let getDirectionList=props.getDirectionList;
-  let clearStop=props.clearStop;
   useEffect(() => {
     getRouteNumber();
   },[route])
   useEffect(() => {
     getDirectionList();
-  },[route])
+  },[routeNumber])
   const results = props.routeList.filter(route =>
     route.Description.toLowerCase().includes(props.route.toLowerCase()));
   return (
@@ -72,7 +69,6 @@ function RouteSearchSuggest(props) {
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                <button style={{ color: 'white', backgroundColor: "darkslategray", border: '.5 px solid white' }} className="btn" type="submit" onClick={props.getRouteNumberClick}>Choose This Route</button>
               </div>
             </form>
           </div>

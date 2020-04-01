@@ -3,9 +3,7 @@ import React, { Component, useEffect } from "react";
 function StopSearchSuggest(props) {
   let stop=props.stop;
   let stopValue=props.stopValue;
-  let departureList=props.departureList;
   let getStopValue=props.getStopValue;
-  let getStopValueClick=props.getStopValueClick;
   let getDepartureList=props.getDepartureList;
   useEffect(() => {
     getStopValue();
@@ -71,7 +69,6 @@ function StopSearchSuggest(props) {
               </div>
               <div className="modal-footer">
                 <button className="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
-                <button style={{ color: 'white', backgroundColor: "darkslategray", border: '.5 px solid white' }} className="btn" type="submit" onClick={props.getStopValueClick}>Choose this stop</button>
               </div>
             </form>
           </div>
