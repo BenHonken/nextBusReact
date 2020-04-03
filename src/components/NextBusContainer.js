@@ -40,8 +40,6 @@ class NextBusContainer extends Component {
     }
     this.clearDirection();
     this.clearStop();
-    console.log(this.state.route)
-    console.log(this.state.routeNumber)
     await this.getDirectionList()
   }
   getDirectionList = async () => {
@@ -65,7 +63,6 @@ class NextBusContainer extends Component {
         goodStop = true;
       }
     }
-    await this.getDepartureList();
   }
   clearStop() {
     this.setState({ 'stop': "" });
@@ -81,7 +78,6 @@ class NextBusContainer extends Component {
   getDepartureList = async () => {
     let response = await axios.get('https://svc.metrotransit.org/NexTrip/' + this.state.routeNumber + '/' + this.state.direction + '/' + this.state.stopValue + '?format=json')
     this.setState({ 'departureList': response.data });
-    console.log('https://svc.metrotransit.org/NexTrip/' + this.state.routeNumber + '/' + this.state.direction + '/' + this.state.stopValue + '?format=json');
   }
   handleClickRoute = (event) => {
     event.preventDefault();
